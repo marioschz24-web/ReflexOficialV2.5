@@ -45,6 +45,8 @@ h1:focus{outline:none}
 .choice.sel{border-color:var(--acc);background:var(--accbg)}
 .choice b{display:block;font-size:18px;margin-bottom:2px}
 .choice small{font-size:15px;color:var(--mute)}
+.choice .cm{display:table;margin:6px 0 4px;font-size:13px;font-weight:700;color:var(--acc);background:var(--accbg);border-radius:5px;padding:2px 8px;font-variant-numeric:tabular-nums}
+
 button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .foot{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px))}
 .foot div{max-width:440px;margin:0 auto}
@@ -68,6 +70,7 @@ details{margin-top:6px}summary{cursor:pointer;font-weight:700;color:var(--acc);p
 input[type=range]{width:100%;accent-color:var(--acc);height:32px}
 .sl{display:flex;justify-content:space-between;font-weight:700;margin-top:8px}
 .msg{font-size:15px;color:var(--mute);margin-top:8px}
+.big2 small{font-size:16px;font-weight:600;color:var(--mute)}
 .twin{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;padding:8px 12px;background:var(--accbg);border-radius:12px;font-size:15px}
 .twin[hidden]{display:none}
 .row span:last-child{text-align:right}
@@ -137,6 +140,11 @@ header{position:sticky;top:0;z-index:5;background:var(--bg)}
 .trk div{height:100%;background:var(--mute);border-radius:6px}
 .cr.on .trk div{background:var(--acc)}
 .cr.on .rw b{color:var(--acc)}
+button.cr{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;margin:0 0 10px;cursor:pointer;min-height:44px}
+button.cr.on{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset}
+button.cr:hover{background:var(--accbg)}
+.cr .rw em{font-style:normal;font-size:14px;font-weight:700;color:var(--acc)}
+.cr-d{font-size:15px;color:var(--ink);margin:4px 0 0;font-variant-numeric:tabular-nums}
 .two{display:flex;gap:16px;margin-bottom:8px}
 .two>div{flex:1}
 .big2{font-size:36px;font-weight:800;line-height:1.1}
@@ -264,6 +272,8 @@ h1{font-size:28px;letter-spacing:-.02em}
 .feat b{display:block;font-size:16px}
 .feat span{display:block;font-size:14px;color:var(--mute);line-height:1.35}
 .legal{font-size:12px;color:var(--mute);line-height:1.4;margin:18px 0 0;text-align:center}
+#live{color:var(--mute);opacity:1}
+@media(max-width:440px){#twin>span:first-child{display:none}}
 .lb{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:5px;vertical-align:middle;white-space:nowrap}
 .lb-r{background:var(--line);color:var(--mute)}
 .lb-e{background:var(--okbg);color:var(--ok)}
@@ -385,6 +395,7 @@ h1{font-size:28px;letter-spacing:-.02em}
 .seg{display:flex;background:var(--line);border-radius:10px;padding:3px}
 .seg button{border:0;background:none;font:inherit;font-weight:700;font-size:14px;color:var(--mute);padding:6px 14px;border-radius:8px;cursor:pointer;min-height:44px}
 .seg button[aria-pressed=true]{background:var(--card);color:var(--ink)}
+.seg button[aria-pressed=false]{color:var(--head)}
 #pmap{display:block;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 @media(prefers-reduced-motion:reduce){.pav-in,.pop{animation:none}}
 
@@ -725,7 +736,7 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--acc);min-height:
   <p class="lead">Desde tu cuenta Bci.</p>
   <div class="card"><div class="bk"><span class="dot" aria-hidden="true"></span><b>Conectado a Bci</b><span class="msg" id="bkt" style="margin:0">actualizado ahora</span></div><div id="cats"></div></div>
   <div class="card"><div class="eyebrow">Últimos movimientos</div><div id="txs"></div></div>
-  <button class="cta sec" id="newtx">Demo: llega un movimiento nuevo</button>
+  <button class="cta sec" id="newtx" hidden>Demo: llega un movimiento nuevo</button>
   <div class="msg" id="live" aria-live="polite">Se actualiza solo.</div>
   
   
@@ -751,9 +762,9 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--acc);min-height:
 <section class="step" data-s="4">
   <h1 tabindex="-1">¿Qué camino quieres probar?</h1>
   <p class="lead">Luego puedes probar los otros.</p>
-  <button class="choice" data-pick="p:ahora"><b>La vía rápida</b><small>Juntas solo el pie mínimo (10%). Llegas antes, pero tu cuota mensual es más alta.</small></button>
-  <button class="choice" data-pick="p:esperar"><b>Lento pero seguro</b><small>Juntas más pie (20%). Tardas más, pero tu cuota mensual es más baja.</small></button>
-  <button class="choice" data-pick="p:ajustar"><b>Ajustar la vivienda</b><small>Vivienda más acotada. Menos cuota.</small></button>
+  <button class="choice" data-pick="p:ahora"><b>La vía rápida</b><span class="cm" id="cm-ahora"></span><small>Juntas solo el pie mínimo (10%). Llegas antes, pero tu cuota mensual es más alta.</small></button>
+  <button class="choice" data-pick="p:esperar"><b>Lento pero seguro</b><span class="cm" id="cm-esperar"></span><small>Juntas más pie (20%). Tardas más, pero tu cuota mensual es más baja.</small></button>
+  <button class="choice" data-pick="p:ajustar"><b>Ajustar la vivienda</b><span class="cm" id="cm-ajustar"></span><small>Vivienda más acotada. Menos cuota.</small></button>
 </section>
 
 <section class="step" data-s="5">
@@ -845,6 +856,7 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--acc);min-height:
   <button class="cta sec" id="share">Copiar escenario</button>
   <button class="cta sec" id="otro">Probar otro camino</button>
   <div class="msg" id="ok" aria-live="polite"></div>
+  <p class="legal" id="apist" hidden></p>
   <p class="legal">Simulación con datos de ejemplo. No es una oferta de Bci ni asesoría financiera.</p>
 </section>
 
@@ -881,7 +893,7 @@ details.more summary{cursor:pointer;font-weight:700;color:var(--acc);min-height:
   <div class="card"><div class="eyebrow">Lo que viene</div><div id="mnext"></div></div>
   <div class="card"><div class="eyebrow">Cómo va tu mes</div><div class="msg" id="mapsum" style="margin:0 0 6px"></div><svg id="mchart" width="100%" role="img" aria-label="Saldo del mes con rango probable"></svg><div class="msg" id="fcnote"></div></div>
   <button class="cta sec" id="learnbtn">Aprende con tus números</button>
-  <button class="lnk" id="fcbtn">Cargar pronóstico (.json)</button><input type="file" id="fcfile" accept=".json,application/json" hidden>
+  <button class="lnk" id="fcbtn" hidden>Cargar pronóstico (.json)</button><input type="file" id="fcfile" accept=".json,application/json" hidden>
 </section>
 <section class="step" data-s="10">
   <h1 tabindex="-1">Decidan juntos</h1>
@@ -903,7 +915,19 @@ var pc=function(n){return n.toFixed(1).replace(".",",")+"%"};
 var SK='reflex-v1';
 function save(){if(S.step===0&&SV0&&SV0.step>0)return;try{localStorage.setItem(SK,JSON.stringify(S))}catch(e){}}
 function loadSaved(){try{var j=localStorage.getItem(SK);return j?JSON.parse(j):null}catch(e){return null}}
+var QS=new URLSearchParams(location.search);
+if(QS.has('nuevo')){try{localStorage.removeItem(SK)}catch(e){}}
 var SV0=loadSaved();
+/* Cliente de la Reflex API: se activa si la app se abre desde el servidor o con ?api=URL. Sin servidor, todo sigue funcionando en el teléfono. */
+var API={base:null,t:0,
+ init:function(){var q=QS.get('api'),b=q?q.replace(/\/$/,''):(/^https?:$/.test(location.protocol)&&!/claude|anthropic|usercontent/.test(location.hostname)?location.origin:null);if(!b)return;
+  fetch(b+'/api/salud').then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&j.estado==='ok'){API.base=b;API.sync()}}).catch(function(){})},
+ body:function(){var o={};['e1','e2','par','fam','sal','arr','ali','otr','del','sus','com','pen','ah0','inv','val','pie','plazo','tasa','rj','adj'].forEach(function(k){o[k]=S[k]});o.q=S.q==='pareja'?'pareja':'sola';o.ap={};['del','sus','com'].forEach(function(k){o.ap[k]=!!S.ap[k]});return o},
+ req:function(m,u,b){return fetch(API.base+u,{method:m,headers:{'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined}).then(function(r){return r.ok?r.json():Promise.reject(r.status)})},
+ sync:function(){if(!API.base||S.step<8)return;clearTimeout(API.t);API.t=setTimeout(function(){
+  var b=API.body(),done=function(j){if(j&&j.id){S.pid=j.id;save()}var el=$('apist');if(!el||!j)return;var m=j.proyeccion.meses,c=calc();el.hidden=false;el.textContent='Plan guardado en el servidor de Reflex'+(m!==null?' - el servidor calcula '+m+' meses sin imprevistos.':'.')};
+  (S.pid?API.req('PATCH','/api/perfiles/'+S.pid,b).catch(function(){S.pid=null;return API.req('POST','/api/perfiles',b)}):API.req('POST','/api/perfiles',b)).then(done).catch(function(){})},700)},
+ lesson:function(id,ok){if(API.base&&S.pid)API.req('POST','/api/perfiles/'+S.pid+'/lecciones',{leccion:id,correcta:ok}).catch(function(){})}};
 var S={step:0,e1:1050000,e2:480000,par:700000,fam:420000,sal:140000,arr:560000,ali:260000,otr:110000,del:80000,sus:40000,com:90000,pen:90000,ah0:2400000,inv:1000000,p:null,q:null,ev:{},ap:{},de:{},sel:0,vt:{},job2:true,evA:{},tasa:4,rsv:50000,rj:4,gc:1.6,ant:'dep',cons:false,uf:41264,plazo:30,val:85000000,pie:10,adj:0,pal:0};
 var PRE={ahora:[85000000,10],esperar:[85000000,20],ajustar:[62000000,15]};
 var NAMES={ahora:"La vía rápida",esperar:"Lento pero seguro",ajustar:"Ajustar la vivienda"};
@@ -987,7 +1011,7 @@ function wow(c){
   else{seg('dsv',0,sv0b/I);seg('dch',0,0);seg('dnw',0,0)}
   $('dnm').textContent=pr.meses===null?'—':pr.meses;$('dnl').textContent=pr.meses===null?'sin llegar':pr.meses===1?'mes al pie':'meses al pie';
   var gs=Math.max(0,I-sv1-(S.pal<0?Math.min(-S.pal,sv0b):0)),pt=function(v){return Math.round(v/I*100)+'%'},li=function(cl,t,v){return '<div class="dn-r"><i class="'+cl+'"></i><span>'+t+'</span><b>'+money(v)+' <small>'+pt(v)+'</small></b></div>'};
-  $('dnlg').innerHTML=li('dn-k-sv','Ahorras',S.pal>0?sv0b:sv1)+(S.pal>0?li('dn-k-ch','Tu cambio',sv1-sv0b):'')+(S.pal<0?li('dn-k-nw','Gasto nuevo',Math.min(-S.pal,sv0b)):'')+li('dn-k-g','Gastos',gs)+'<div class="dn-t">Entra al mes: '+money(I)+'</div>';
+  $('dnlg').innerHTML=li('dn-k-sv','Ahorras',S.pal>0?sv0b:sv1)+(S.pal>0?li('dn-k-ch','Tu cambio',sv1-sv0b):'')+(S.pal<0?li('dn-k-nw','Gasto nuevo',Math.min(-S.pal,sv0b)):'')+li('dn-k-g','Gastos y reserva',gs)+'<div class="dn-t">Entra al mes: '+money(I)+'</div>';
   $('wdnt').textContent='De '+money(I)+' que entran al mes, ahorras '+money(sv1)+' ('+pt(sv1)+'). Pie en '+(pr.meses===null?'sin llegar':pr.meses+' meses')+'.';
   var m0=c.meses,m1=pr.meses,pl=function(v){return v===1?'mes':'meses'},rl,rv,rs2,cls='';
   if(!S.pal){rl='Tu pie llega en';rv=m0===null?'Aún no llegas':m0+' '+pl(m0);rs2=''}
@@ -1103,7 +1127,7 @@ function ncdf(z){var t=1/(1+.2316419*Math.abs(z)),d=.3989423*Math.exp(-z*z/2),p=
 function pFmt(x){return x<1?'menos de 1%':x>99?'más de 99%':x+'%'}
 function pPos(q,sd){return sd>0?ncdf(q/sd):(q>=0?1:0)}
 function mdl(st){
-  $('mdls').textContent='statsforecast - AutoETS. Acierta su rango el '+BT.cov+'% de los días.';
+  $('mdls').textContent='Aprendió de '+BT.days+' días de tus gastos y acierta su rango 8 de cada 10 días.';
   var pp=Math.round(pPos(st.q,st.sd)*100);
   $('mdlr').innerHTML=[['Aprendió de',BT.days+' días de gastos'],['Qué pronostica','Supermercado, delivery, transporte y compras, día a día'],['Precisión medida','El '+BT.cov+'% de los días cayó en su rango del 80% ('+BT.weeks+' semanas de prueba)'],['Frente a repetir la semana pasada','Se equivoca '+Math.round((1-BT.mae/BT.maeN)*100)+'% menos por día'],['Cerrar el mes en positivo',pFmt(pp)+' de probabilidad'],['Qué no pronostica','Imprevistos, sueldos ni el mercado']].map(function(r){return '<div class="mrow"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>'}).join('');
   var P=AV.P||plan(),T=P.T,h=BT.h,fut=[],i,k,ks=['ali','del','otr','com'];
@@ -1115,7 +1139,7 @@ function mdl(st){
   var hx=(h.length*bw).toFixed(1);g+='<line class="mc-t" x1="'+hx+'" x2="'+hx+'" y1="0" y2="'+H+'"/><text class="mc-x" x="'+(hx-4)+'" y="'+(H+14)+'" text-anchor="end">Últimos 28 días</text><text class="mc-x" x="'+(+hx+4)+'" y="'+(H+14)+'">Próximos 14</text>';
   $('mdlc').innerHTML=g;
 }
-function mStats(P){var inn=0,out=0,sd=0,i;for(i=1;i<=P.N;i++)P.days[i].forEach(function(z){if(z.t==='res'||z.t==='rsv')return;if(z.a>0)inn+=z.a;else out-=z.a;if(i>=P.T&&z.t==='est')sd+=Math.pow((z.hi-z.lo)/2.56,2)});return {inn:inn,out:out,q:P.cum[P.N],sd:Math.sqrt(sd),r:Math.round(1.28*Math.sqrt(sd)/1000)*1000}}
+function mStats(P){var inn=0,out=0,sd=0,i;for(i=1;i<=P.N;i++)P.days[i].forEach(function(z){if(z.t==='res')return;if(z.a>0)inn+=z.a;else out-=z.a;if(i>=P.T&&z.t==='est')sd+=Math.pow((z.hi-z.lo)/2.56,2)});return {inn:inn,out:out,q:P.cum[P.N],sd:Math.sqrt(sd),r:Math.round(1.28*Math.sqrt(sd)/1000)*1000}}
 var MV='path',AV={cur:null,tg:0,raf:0,day:0,play:0,drag:false,moving:false,P:null};
 function ck2(v){var a=Math.abs(v);return (v<0?'−':'')+'$'+(a>=1e6?(a/1e6).toFixed(1).replace('.',',')+'M':Math.round(a/1000)+'k')}
 function netOf(it){return it.reduce(function(s2,z){return s2+z.a},0)}
@@ -1156,7 +1180,7 @@ function drawPath(P){
   var sv=$('pmap');sv.setAttribute('viewBox','0 0 '+W+' '+H);sv.innerHTML=h;
   AV.P=P;if(AV.cur===null){AV.cur=AV.tg=T-1}
   $('pcar').innerHTML=DR.k&&!DR.d?'<rect class="pbox" x="-9" y="-66" width="18" height="14" rx="3"/><text class="pboxt" y="-55.5">!</text>':'';
-  $('phint').textContent=DR.k&&!DR.d?'Lleva el imprevisto a un día y tócalo para dejarlo ahí.':matchMedia('(hover:hover)').matches?'Deja el mouse sobre un día y tu gemelo camina hasta ahí.':'Toca un día o arrastra a tu gemelo por el camino.';
+  $('phint').textContent=DR.k&&!DR.d?'Lleva el imprevisto a un día y tócalo para dejarlo ahí.':matchMedia('(hover:hover) and (pointer:fine)').matches?'Deja el mouse sobre un día y tu gemelo camina hasta ahí.':'Toca un día o arrastra a tu gemelo por el camino.';
   AV.day=0;placeAv();
 }
 function drawCal(P){
@@ -1221,7 +1245,7 @@ function hud(P){
   P=P||AV.P;if(!P)return;var d=AV.day||P.T,it=P.days[d],net=netOf(it),dt=new Date(P.D.getFullYear(),P.D.getMonth(),d),wd=dt.toLocaleDateString('es-CL',{weekday:'long'});
   var nm=it.filter(function(z){return z.t!=='est'&&z.t!=='res'}).map(function(z){return z.n});
   var tg=d<P.T?'<span class="lb lb-r">Registrado</span>':d===P.T?'<span class="lb lb-e">Hoy</span>':'<span class="lb lb-p">Proyectado</span>';
-  $('hudd').innerHTML='<button class="hudrow" data-open="'+d+'" aria-label="Ver detalle del día '+d+'"><span class="hd-d"><b>'+wd.charAt(0).toUpperCase()+wd.slice(1,3)+' '+d+'</b>'+tg+'</span><span class="hd-v"><small>Este día</small><b>'+(net>=0?'+':'−')+money(Math.abs(net))+'</b></span><span class="hd-v"><small>Saldo</small><b>'+money(P.cum[d])+'</b></span><svg class="hd-c" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="hud-i">'+(nm.length?nm.slice(0,2).join(' - ')+(nm.length>2?' y más':''):'Gastos del día a día')+'</div>';
+  $('hudd').innerHTML='<button class="hudrow" data-open="'+d+'" aria-label="Ver detalle del día '+d+'"><span class="hd-d"><b>'+wd.charAt(0).toUpperCase()+wd.slice(1,3)+' '+d+'</b>'+tg+'</span><span class="hd-v"><small>Este día</small><b>'+(net>=0?'+':'−')+money(Math.abs(net))+'</b></span><span class="hd-v"><small>Neto del mes</small><b>'+money(P.cum[d])+'</b></span><svg class="hd-c" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="hud-i">'+(nm.length?nm.slice(0,2).join(' - ')+(nm.length>2?' y más':''):'Gastos del día a día')+'</div>';
 }
 var DR={k:null,d:null},DOPEN=false;
 function dsync(){var sh=$('isheet'),was=!sh.hidden;sh.hidden=!DOPEN;document.body.style.overflow=DOPEN?'hidden':'';if(DOPEN&&!was){var cb=sh.querySelector('.hbtn');cb&&cb.focus()}
@@ -1262,7 +1286,7 @@ function trip(c){
   else if(done)t='Reuniste el pie hace '+ageS(m-mp)+'.'+(S.nocr?'':' Tu cuota estimada sería '+money(c.cuota)+' al mes.');
   else t=mp===null?'Con este ritmo aún no llegas al pie.':'Te faltan '+money(goal-v)+', unos '+(mp-m)+' meses a tu ritmo actual.';
   var m80=sim(true,null,S.adj-k*0.84/1.28).meses,fd=function(x){var D2=new Date();D2.setDate(1);D2.setMonth(D2.getMonth()+x);return D2.toLocaleDateString('es-CL',{month:'long',year:'numeric'})};
-  if(mp!==null)t+=' Probabilidad de reunir el pie: 50% para '+fd(mp)+(m80!==null?' y 80% para '+fd(m80):'')+'.';
+  if(mp!==null)t+=' Lo más probable es que reúnas el pie cerca de '+fd(mp)+(m80!==null?'; en 8 de cada 10 escenarios lo tienes a más tardar en '+fd(m80):'')+'.';
   $('tnote').textContent=t;
 }
 var LR={i:0,a:{}};
@@ -1308,10 +1332,10 @@ function run(f){var o=S.e2;S.e2=o*f;var r=sim(true);S.e2=o;return r}
 function pathRes(p){var v=S.val,pi=S.pie;S.val=PRE[p][0];S.pie=PRE[p][1];var r=sim(true),cu=cuotaDe(S.val-S.val*S.pie/100);S.val=v;S.pie=pi;return {m:r.meses,cu:cu}}
 function proj(c){
   var nm={ahora:'La vía rápida',esperar:'Lento pero seguro',ajustar:'Ajustar vivienda'},r3=Object.keys(PRE).map(function(p){return [p,pathRes(p)]}),mxm=Math.max.apply(null,r3.map(function(r){return r[1].m||0}).concat([1])),inc=S.q==='pareja'?S.e1+S.e2+S.par:S.e1+S.e2;
-  $('cmp').innerHTML=r3.map(function(r){var m=r[1].m;return '<div class="cr'+(r[0]===S.p?' on':'')+'"><div class="rw"><b>'+nm[r[0]]+'</b><span>'+(m===null?'sin llegar':m+' meses')+' - cuota '+pc(r[1].cu/inc*100)+'</span></div><div class="trk"><div style="width:'+(m===null?100:Math.max(3,m/mxm*100))+'%"></div></div>'+(m===null?'':'<div class="msg" style="margin:4px 0 0">Arriendo hasta comprar: '+money(S.arr*m)+'</div>')+'</div>'}).join('');
+  $('cmp').innerHTML=r3.map(function(r){var m=r[1].m,on=r[0]===S.p;return '<button class="cr'+(on?' on':'')+'" data-cmp="'+r[0]+'" aria-pressed="'+on+'"><div class="rw"><b>'+nm[r[0]]+'</b><em>'+(on?'Tu camino':'Elegir')+'</em></div><div class="cr-d">'+(m===null?'No alcanzas el pie':m+' meses')+' - cuota '+money(r[1].cu)+' ('+pc(r[1].cu/inc*100)+' de tu ingreso)</div><div class="trk"><div style="width:'+(m===null?100:Math.max(3,m/mxm*100))+'%"></div></div>'+(m===null?'':'<div class="msg" style="margin:0">Arriendo hasta comprar: '+money(S.arr*m)+'</div>')+'</button>'}).join('');
   var ra=r3[0][1],re=r3[1][1];if(ra.m!==null&&re.m!==null&&re.m>ra.m)$('cmp').innerHTML+='<div class="msg">Con Lento pero seguro pagas '+money(S.arr*(re.m-ra.m))+' más de arriendo que con La vía rápida, pero tu cuota baja '+money(ra.cu-re.cu)+' al mes.</div>';
   var m0=sim(false,0,0).meses,m1=sim(false,null,0).meses,m1b=sim(false).meses,m2=c.meses,df=function(a,b){return a===null||b===null?null:b-a},d1=df(m0,m1),d1b=df(m1,m1b),d2=df(m1b,m2),fm=function(d){return d===null?'—':(d>0?'+':d<0?'−':'')+Math.abs(d)+(Math.abs(d)===1?' mes':' meses')};
-  $('mov').innerHTML='<div class="two"><div><div class="msg" style="margin:0">Sin cambios</div><div class="big2">'+(m0===null?'—':m0)+'</div></div><div><div class="msg" style="margin:0">Con tus decisiones</div><div class="big2">'+(m2===null?'—':m2)+'</div></div></div>'+(d1?'<div class="row"><span>Ajustes de ahorro</span><b class="'+(d1<0?'gd':'')+'">'+fm(d1)+'</b></div>':'')+(S.adj?'<div class="row"><span>Cambio mensual que elegiste</span><b class="'+(d1b<0?'gd':d1b>0?'bd':'')+'">'+fm(d1b)+'</b></div>':'')+(d2?'<div class="row"><span>Imprevistos y calendario</span><b class="'+(d2>0?'bd':'')+'">'+fm(d2)+'</b></div>':'');
+  $('mov').innerHTML='<div class="two"><div><div class="msg" style="margin:0">Sin cambios</div><div class="big2">'+(m0===null?'—':m0+'<small> meses</small>')+'</div></div><div><div class="msg" style="margin:0">Con tus decisiones</div><div class="big2">'+(m2===null?'—':m2+'<small> meses</small>')+'</div></div></div>'+(d1?'<div class="row"><span>Ajustes de ahorro</span><b class="'+(d1<0?'gd':'')+'">'+fm(d1)+'</b></div>':'')+(S.adj?'<div class="row"><span>Cambio mensual que elegiste</span><b class="'+(d1b<0?'gd':d1b>0?'bd':'')+'">'+fm(d1b)+'</b></div>':'')+(d2?'<div class="row"><span>Imprevistos y calendario</span><b class="'+(d2>0?'bd':'')+'">'+fm(d2)+'</b></div>':'');
 }
 function profile(c){
   var ing=S.e1+S.e2+S.par,g=gT(),nd=S.arr+S.fam+S.sal+S.ali+S.otr+S.pen,wn=S.del+S.sus+S.com,sv=Math.max(0,c.ah),tt=nd+wn+sv||1,col=g?(S.ah0+S.inv)/g:0,p=function(v){return Math.round(v/tt*100)};
@@ -1400,7 +1424,7 @@ function paint(){
   $("ahmsg").textContent=c.ah>0?"Después de gastos y pagos pendientes.":"Hoy no alcanzas a ahorrar. Revisa ingresos o gastos.";
   $("vall").textContent=money(S.val);$("piel").textContent=S.pie+"% ("+money(c.pieM)+")";
   bank();profile(c);var tw=$("twin");tw.hidden=!(S.p&&S.step>=5);
-  tw.innerHTML="<span>Tu gemelo</span><b>"+(c.meses===null?"Sin pie alcanzable":"Pie en "+c.meses+" meses")+"</b><span class=\"badge "+c.L[1]+"\">"+pc(c.pct)+"</span>";
+  tw.innerHTML="<span>Tu gemelo</span><b>"+(c.meses===null?"Sin pie alcanzable":"Pie en "+c.meses+" meses")+"</b><span class=\"badge "+c.L[1]+"\">Cuota "+pc(c.pct)+"</span>";
 }
 function paintResults(){
   var c=calc();
@@ -1419,9 +1443,10 @@ function paintResults(){
   if(evNames().length&&c.R.min<0)v+="Tu ahorro no alcanzaría a cubrirlos. ";
   v=v.trim();
   $("verdad").textContent=v;$("verdad").closest(".card").style.display=v?"":"none";
-  chart(c);log(c);recs();proj(c);cond(c);elig(c);fut3(c);hero(c);trip(c);learn(c);wow(c);cush(c);$("val").value=S.val;$("pie").value=S.pie;$("rj").value=S.rj;$("rjl").textContent=String(S.rj).replace(".",",")+"%";paint();
+  chart(c);log(c);recs();proj(c);cond(c);elig(c);fut3(c);hero(c);trip(c);learn(c);wow(c);cush(c);API.sync();$("val").value=S.val;$("pie").value=S.pie;$("rj").value=S.rj;$("rjl").textContent=String(S.rj).replace(".",",")+"%";paint();
 }
-function sync(){
+function cmPaint(){['ahora','esperar','ajustar'].forEach(function(k){var e=$('cm-'+k);if(!e)return;var r=pathRes(k);e.textContent=(r.m===null?'No alcanzas':r.m+' meses')+' - cuota '+money(r.cu)})}
+function sync(){cmPaint();
   document.querySelectorAll("[data-k]").forEach(function(i){if(document.activeElement!==i)i.value=fmtN(S[i.dataset.k])});
   syncJob();evUI();
   document.querySelectorAll("[data-pick]").forEach(function(b){var p=b.dataset.pick.split(":"),k=p[0],v=p[1];
@@ -1438,7 +1463,7 @@ function go(n,back){
   sync();
   if(n>=5)paintResults();else paint();
   if(n===8)walk();
-  if(n===10){pareja();noCr()}if(n===9){drawMap();setTimeout(function(){wave('¡Hola!')},500);$('hud').style.top=(document.querySelector('header').offsetHeight+4)+'px';setTimeout(function(){var e=document.querySelector('.nd.today');if(e)e.scrollIntoView({block:'center'})},80)}
+  if(n===10){pareja();noCr()}if(n===9){drawMap();setTimeout(function(){wave('¡Hola!')},500);$('hud').style.top=(document.querySelector('header').offsetHeight+4)+'px'}
   window.scrollTo(0,0);
   var h=document.querySelector('.step.on h1');if(h)h.focus({preventScroll:true});
 }
@@ -1519,7 +1544,8 @@ $('gear').onclick=function(){navTo('aju')};
 $('learnbtn').onclick=function(){go(8,false);tab('apr')};
 $('tm').oninput=function(){if(TRIP.t){clearInterval(TRIP.t);TRIP.t=0}TRIP.m=+this.value;trip(TRIP.c||calc())};
 $('tplay').onclick=function(){var c=TRIP.c||calc(),end=c.meses===null?+$('tm').max:Math.min(+$('tm').max,c.meses);if(TRIP.t){clearInterval(TRIP.t);TRIP.t=0}if(reduce){TRIP.m=end;trip(c);return}TRIP.m=0;trip(c);TRIP.t=setInterval(function(){TRIP.m++;trip(c);if(TRIP.m>=end){clearInterval(TRIP.t);TRIP.t=0}},Math.max(45,2600/Math.max(1,end)))};
-$('learn').onclick=function(e){var o=e.target.closest('[data-lo]'),r=e.target.closest('[data-lr]'),rv=e.target.closest('[data-lrv]');if(rv){LR.r=LR.r||{};LR.r[LR.i]=true;learn(calc());return}if(o){LR.a[LR.i]=+o.dataset.lo;learn(calc());var f=document.querySelector('#learn [data-lo="'+o.dataset.lo+'"]');if(f)f.focus();return}if(r){LR.i=+r.dataset.lr;if(LR.i===0){LR.a={};LR.r={}}learn(calc());var h=document.querySelector('#learn .lt');if(h){h.setAttribute('tabindex','-1');h.focus()}}};
+$('cmp').onclick=function(e){var b=e.target.closest('[data-cmp]');if(!b)return;var v=b.dataset.cmp;if(v===S.p)return;S.p=v;S.val=PRE[v][0];S.pie=PRE[v][1];save();paintResults();var n=document.querySelector('#cmp [data-cmp="'+v+'"]');if(n)n.focus();var lv=$('live');if(lv)lv.textContent='Cambiaste a '+({ahora:'La vía rápida',esperar:'Lento pero seguro',ajustar:'Ajustar la vivienda'})[v]+'.'};
+$('learn').onclick=function(e){var o=e.target.closest('[data-lo]'),r=e.target.closest('[data-lr]'),rv=e.target.closest('[data-lrv]');if(rv){LR.r=LR.r||{};LR.r[LR.i]=true;learn(calc());return}if(o){LR.a[LR.i]=+o.dataset.lo;try{var LL=lessons(calc());API.lesson('l'+(LR.i+1),LL[LR.i]&&LL[LR.i].k===LR.a[LR.i])}catch(_){};learn(calc());var f=document.querySelector('#learn [data-lo="'+o.dataset.lo+'"]');if(f)f.focus();return}if(r){LR.i=+r.dataset.lr;if(LR.i===0){LR.a={};LR.r={}}learn(calc());var h=document.querySelector('#learn .lt');if(h){h.setAttribute('tabindex','-1');h.focus()}}};
 $('map').onclick=function(e){var g=e.target.closest('[data-day]');if(g)dayTap(+g.dataset.day)};
 $('sheet').onclick=function(e){if(e.target.closest('[data-close]')){$('sheet').hidden=true;var f=document.querySelector('[data-day="'+S.sel+'"]');if(f)f.focus();return}var x=e.target.closest('[data-del]');if(x){delItem(+x.dataset.del);return}if(e.target.closest('#addgo'))addItem()};
 $('sheet').onchange=function(e){if(e.target.id==='addk')$('adda').value=ADD[e.target.value].a};
@@ -1545,6 +1571,8 @@ go(0,false);
 (function(){var sv=SV0;var D=JSON.parse(JSON.stringify(S));D.step=0;window.__DEF=D;
  if(sv&&sv.step>0){$('resume').hidden=false}
  $('rsmgo').onclick=function(){var x=SV0;if(!x)return;Object.keys(x).forEach(function(k){S[k]=x[k]});$('resume').hidden=true;SV0=null;go(x.step||1,false)};
+ if(QS.has('demo'))$('newtx').hidden=false;if(QS.has('dev'))$('fcbtn').hidden=false;
+  API.init();
  $('rsmnew').onclick=function(){SV0=null;try{localStorage.removeItem(SK)}catch(e){}var d=JSON.parse(JSON.stringify(window.__DEF));Object.keys(d).forEach(function(k){S[k]=d[k]});$('resume').hidden=true;DR.k=null;DR.d=null;LR.i=0;LR.a={};sync();paint()};
 })();
 </script>

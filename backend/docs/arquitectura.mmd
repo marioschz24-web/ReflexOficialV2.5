@@ -1,0 +1,24 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial","primaryColor":"#EAF2FC","primaryBorderColor":"#1F64B8","primaryTextColor":"#2C3A41","lineColor":"#546E7A","clusterBkg":"#FFFFFF","clusterBorder":"#E4E9EB","edgeLabelBackground":"#FFFFFF"}}}%%
+flowchart LR
+  subgraph Cliente["Cliente (teléfono)"]
+    UI["App Reflex<br/>HTML + JS<br/>localStorage (respaldo offline)"]
+  end
+  subgraph API["Reflex API · FastAPI"]
+    R["Rutas REST<br/>/perfiles · /proyeccion · /caminos<br/>/imprevistos · /pronostico · /lecciones · /eventos"]
+    V["Validación<br/>pydantic"]
+    M["Modelo de cálculo<br/>simular() · calcular() · cuota()"]
+    E["Errores RFC 7807<br/>problem+json"]
+  end
+  subgraph Datos["Datos"]
+    DB[("SQLite<br/>perfiles · lecciones · eventos")]
+    FC["forecast_statsforecast.json<br/>p10 · p50 · p90 por categoría"]
+  end
+  subgraph Offline["Proceso offline (Python)"]
+    SF["statsforecast AutoETS<br/>+ backtest cross_validation"]
+  end
+  UI -- "HTTPS / JSON" --> R
+  R --> V --> M
+  R -.-> E
+  M --> DB
+  R --> FC
+  SF -- "genera" --> FC
